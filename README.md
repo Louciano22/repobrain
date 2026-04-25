@@ -132,19 +132,6 @@ Trace events: 63
 Session steps: 66
 ```
 
-## Demo Asset Slots
-
-Use these slots for launch screenshots and GIFs. They are placeholders only; no generated screenshots are committed.
-
-| Asset | Suggested path | Capture target |
-| --- | --- | --- |
-| Terminal search screenshot | `docs/assets/terminal-search.png` | `node apps/cli/dist/index.js search "where is provider resolution handled"` |
-| Terminal context pack screenshot | `docs/assets/terminal-context-pack.png` | `node apps/cli/dist/index.js context "add a new provider" --mode balanced` |
-| Terminal critical path screenshot | `docs/assets/terminal-critical-path.png` | `node apps/cli/dist/index.js critical-path "provider changes"` |
-| UI search screenshot | `docs/assets/ui-search.png` | `/ui/search?q=where%20is%20provider%20resolution%20handled` |
-| UI context pack screenshot | `docs/assets/ui-context-pack.png` | `/ui/context-packs?q=add%20a%20new%20provider&mode=balanced` |
-| UI critical path screenshot | `docs/assets/ui-critical-path.png` | `/ui/critical-path?q=provider%20changes` |
-| CLI-to-UI demo GIF | `docs/assets/cli-to-ui-demo.gif` | Init, index, search, then open the matching UI page |
 
 ## MCP Overview
 
