@@ -92,8 +92,8 @@ node apps/cli/dist/index.js context "add a new provider" --mode balanced
 RepoBrain context pack
 Query: add a new provider
 Mode: balanced
-Tokens: 2131/3600
-Files: 8
+Tokens: 1602/3600
+Files: 6
 
 Why this pack
 Selected primary implementation files, supporting config/runtime files, and adjacent integration files based on retrieval score, architecture role, and query match.
