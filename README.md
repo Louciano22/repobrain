@@ -2,12 +2,11 @@
 
 **Stop making AI coding agents rediscover your repo every session.**
 
-RepoBrain is local-first, architecture-aware, model-agnostic repo intelligence for AI-assisted software engineering. It indexes a real codebase into a project-local memory layer, then exposes ranked search, context packs, critical-path hints, trace data, and MCP tools without hidden cloud sync.
+RepoBrain is local-first, architecture-aware, model-agnostic repo intelligence for AI coding agents. It indexes a real codebase into a project-local memory layer, then exposes ranked search, context packs, critical-path hints, trace data, and MCP tools without hidden cloud sync.
 
 ## Current MVP
 
-RepoBrain is source-distributed today. The current MVP includes working local indexing, hybrid search, context pack generation, taxonomy/map output, critical-path scoring, trace/replay, CLI workflows, stdio MCP tools, local UI pages, structured ranking factors, and regression tests.
-
+RepoBrain is source is currently source-first and not yet packaged for npm. The current MVP includes working local indexing, hybrid search, context pack generation, taxonomy/map output, critical-path scoring, trace/replay, CLI workflows, stdio MCP tools, local UI pages, structured ranking factors, and regression tests.
 Packages are still marked `private` and are not configured for npm publishing yet.
 
 ## Why It Exists
