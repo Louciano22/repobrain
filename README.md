@@ -1,0 +1,205 @@
+# RepoBrain
+
+**Stop making AI coding agents rediscover your repo every session.**
+
+RepoBrain is local-first, architecture-aware, model-agnostic repo intelligence for AI-assisted software engineering. It indexes a real codebase into a project-local memory layer, then exposes ranked search, context packs, critical-path hints, trace data, and MCP tools without hidden cloud sync.
+
+## Current MVP
+
+RepoBrain is source-distributed today. The current MVP includes working local indexing, hybrid search, context pack generation, taxonomy/map output, critical-path scoring, trace/replay, CLI workflows, stdio MCP tools, local UI pages, structured ranking factors, and regression tests.
+
+Packages are still marked `private` and are not configured for npm publishing yet.
+
+## Why It Exists
+
+Coding agents waste time and tokens relearning the same repo shape: where provider logic lives, which files are central, what code is risky, which paths should be ignored, and what context belongs in a task prompt. RepoBrain gives agents a compact, explainable repo memory so every session does not start from zero.
+
+## What It Does
+
+- Indexes a local repository into a project-local `.repobrain/` store.
+- Runs exact, keyword, and provider-aware local semantic retrieval with safe fallback metadata.
+- Builds token-budgeted, explanation-rich context packs for coding-agent tasks.
+- Classifies files into architecture roles and safe/core/danger zones.
+- Surfaces dependency-aware critical-path hints for central, blocking, and risky files.
+- Persists retrieval events, trace events, session steps, and replayable local history.
+- Uses structured score factors and ranking evals to keep ranking quality testable.
+- Exposes the same local data through CLI, MCP tool responses, and the local UI.
+
+## Quickstart
+
+Requirements: Node.js 22+, pnpm 10+, and a local repo you want RepoBrain to inspect.
+
+```bash
+pnpm install
+pnpm build
+cp .env.example .env.local
+
+pnpm --filter @repobrain/cli exec node dist/index.js init .
+pnpm --filter @repobrain/cli exec node dist/index.js index .
+pnpm --filter @repobrain/cli exec node dist/index.js status .
+```
+
+Open the local UI:
+
+```bash
+REPOBRAIN_PROJECT_ROOT="$PWD" pnpm --filter @repobrain/desktop-web dev
+```
+
+Then visit `http://localhost:3000/ui`.
+
+## CLI Overview
+
+All commands run against the current directory unless a repo path or explicit `--repo` flag is provided.
+
+```bash
+pnpm --filter @repobrain/cli exec node dist/index.js search "where is provider resolution handled"
+pnpm --filter @repobrain/cli exec node dist/index.js context "add a new provider" --mode balanced
+pnpm --filter @repobrain/cli exec node dist/index.js map .
+pnpm --filter @repobrain/cli exec node dist/index.js critical-path "provider changes"
+pnpm --filter @repobrain/cli exec node dist/index.js trace .
+pnpm --filter @repobrain/cli exec node dist/index.js trace replay .
+pnpm --filter @repobrain/cli exec node dist/index.js config .
+```
+
+## Example Output
+
+These are shortened example output excerpts from the current CLI.
+
+### Search
+
+```bash
+node apps/cli/dist/index.js search "where is provider resolution handled"
+```
+
+```text
+RepoBrain search
+Query: where is provider resolution handled
+Mode: hybrid
+Semantic: fallback
+Results: 8
+
+Top matches
+1. packages/providers/src/resolver.ts:1-80 score=180
+   Why: architecture role match: provider; source-of-truth implementation file; provider resolution path
+```
+
+### Context Pack
+
+```bash
+node apps/cli/dist/index.js context "add a new provider" --mode balanced
+```
+
+```text
+RepoBrain context pack
+Query: add a new provider
+Mode: balanced
+Tokens: 2131/3600
+Files: 8
+
+Why this pack
+Selected primary implementation files, supporting config/runtime files, and adjacent integration files based on retrieval score, architecture role, and query match.
+```
+
+### Critical Path
+
+```bash
+node apps/cli/dist/index.js critical-path "provider changes"
+```
+
+```text
+RepoBrain critical path
+Query: provider changes
+Central files: 12
+Likely blockers: 10
+Risky files: 10
+
+Central files
+- packages/providers/src/index.ts
+  score=69 role=provider zone=danger
+  factors=query relevance, dependency centrality, architecture role, risk
+```
+
+### Trace
+
+```bash
+node apps/cli/dist/index.js trace
+```
+
+```text
+RepoBrain session trace
+Retrieval events: 3
+Context packs: 2
+Trace events: 63
+Session steps: 66
+```
+
+## Demo Asset Slots
+
+Use these slots for launch screenshots and GIFs. They are placeholders only; no generated screenshots are committed.
+
+| Asset | Suggested path | Capture target |
+| --- | --- | --- |
+| Terminal search screenshot | `docs/assets/terminal-search.png` | `node apps/cli/dist/index.js search "where is provider resolution handled"` |
+| Terminal context pack screenshot | `docs/assets/terminal-context-pack.png` | `node apps/cli/dist/index.js context "add a new provider" --mode balanced` |
+| Terminal critical path screenshot | `docs/assets/terminal-critical-path.png` | `node apps/cli/dist/index.js critical-path "provider changes"` |
+| UI search screenshot | `docs/assets/ui-search.png` | `/ui/search?q=where%20is%20provider%20resolution%20handled` |
+| UI context pack screenshot | `docs/assets/ui-context-pack.png` | `/ui/context-packs?q=add%20a%20new%20provider&mode=balanced` |
+| UI critical path screenshot | `docs/assets/ui-critical-path.png` | `/ui/critical-path?q=provider%20changes` |
+| CLI-to-UI demo GIF | `docs/assets/cli-to-ui-demo.gif` | Init, index, search, then open the matching UI page |
+
+## MCP Overview
+
+RepoBrain exposes a stdio MCP transport for agent hosts and keeps a local JSON runner for smoke tests. Each tool returns a versioned `mcp.v1` envelope with `ok`, `tool`, `sessionId`, `requestId`, `data`, and `meta` fields.
+
+```bash
+pnpm --filter @repobrain/mcp-server start
+pnpm --filter @repobrain/mcp-server exec node dist/index.js \
+  --tool get_context_pack \
+  --repo "$PWD" \
+  --session local-agent-session \
+  --query "add a new provider" \
+  --mode quick
+```
+
+Tools in scope: `index_codebase`, `search_code`, `get_context_pack`, `get_architecture_map`, `get_critical_path`, `explain_retrieval`, `get_session_trace`, `get_index_status`, and `clear_index`.
+
+## Why Not Just Use Code Search?
+
+Code search finds text. RepoBrain adds local repo memory around that text: architecture roles, danger-zone hints, dependency-aware critical paths, token-budgeted context packs, session traces, and explainable ranking factors. The goal is not to replace grep. The goal is to give coding agents a compact, trusted view of what matters for a task.
+
+## How It Works
+
+1. `repobrain init` creates a local `.repobrain/` project store and config.
+2. `repobrain index` discovers safe files, chunks content, extracts symbols, and skips ignored/sensitive paths.
+3. Search combines exact, keyword, local semantic fallback, path-role weighting, and structured score factors.
+4. Context packs select ranked chunks under a token budget and explain why files were included.
+5. Taxonomy and dependency maps power critical-path hints and traceable agent-facing MCP responses.
+
+## Architecture Snapshot
+
+RepoBrain is a pnpm/Turborepo workspace with local UI and docs apps plus focused packages for config, storage, providers, indexing, retrieval, taxonomy, graph analysis, session memory, observability, orchestration, shared types, UI primitives, and testing.
+
+Runtime surfaces:
+
+- `apps/cli`: terminal workflow for init, indexing, retrieval, context, map, critical path, trace, config, and status.
+- `apps/mcp-server`: stdio MCP server and JSON runner for agent-facing tool calls.
+- `apps/desktop-web`: local Next.js UI for search, context packs, repo map, critical path, trace, and config.
+- `apps/docs-site`: concise docs surface for launch and release validation.
+
+## Environment And Security
+
+Start from `.env.example`. Provider keys are optional for the MVP; when missing, retrieval remains local and marks remote semantic behavior as `fallback`. Configure `local-embedding` to enable deterministic local semantic scoring without a cloud call.
+
+RepoBrain stores project metadata in `.repobrain/` and ignores that directory by default. It is designed around explicit local paths, ignored/sensitive path rules, UI-safe config exposure, and redacted provider secret handling. There is no silent cloud sync in the MVP.
+
+## Roadmap
+
+- Broaden ranking evaluation queries against larger fixture repos.
+- Add optional local filesystem watcher support.
+- Improve source/generated artifact pairing for more build systems.
+- Expand optional provider adapters without making cloud services required.
+- Prepare package publishing once the source-distributed MVP has settled.
+
+## Release Smoke Test
+
+Use `docs/smoke-test.md` before tagging a release or publishing a demo branch.

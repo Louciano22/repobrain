@@ -1,0 +1,136 @@
+:root {
+  --bg: #05070b;
+  --panel: #0b111a;
+  --line: #1d2a3a;
+  --text: #eef5ff;
+  --muted: #8a9bb0;
+  --accent: #42f59b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+.docs-shell {
+  display: grid;
+  gap: 18px;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+.docs-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 14px 16px;
+  background: rgba(5, 7, 11, 0.86);
+}
+
+.docs-nav div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.docs-nav a,
+.docs-actions a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.docs-panel {
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 24px;
+  background: var(--panel);
+}
+
+.hero {
+  padding: clamp(28px, 6vw, 58px);
+}
+
+.docs-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.docs-actions a {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 11px 14px;
+  background: #101824;
+}
+
+.docs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.eyebrow {
+  color: var(--accent);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0 0 12px;
+  font-size: clamp(36px, 7vw, 72px);
+  letter-spacing: -0.06em;
+}
+
+p {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+code {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 2px 6px;
+  background: #03060a;
+  color: var(--accent);
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+pre {
+  overflow: auto;
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+  background: #03060a;
+  color: var(--accent);
+  line-height: 1.45;
+}
+
+@media (max-width: 640px) {
+  .docs-shell {
+    padding: 18px;
+  }
+
+  .docs-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .docs-nav {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+}

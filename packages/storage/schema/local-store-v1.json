@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "tables": [
+    "repo_projects",
+    "repo_files",
+    "repo_chunks",
+    "repo_symbols",
+    "repo_taxonomy_labels",
+    "repo_dependency_edges",
+    "context_packs",
+    "session_runs",
+    "session_steps",
+    "provider_configs",
+    "retrieval_events",
+    "trace_events",
+    "model_usage_events"
+  ]
+}

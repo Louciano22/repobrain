@@ -1,0 +1,23 @@
+{
+  "name": "repobrain",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.28.2",
+  "description": "Local-first repo intelligence platform and MCP server workspace.",
+  "scripts": {
+    "build": "turbo build",
+    "check": "turbo check",
+    "dev": "turbo dev",
+    "lint": "turbo check",
+    "test": "pnpm build && pnpm --filter @repobrain/testing test",
+    "cli": "pnpm --filter @repobrain/cli start",
+    "mcp": "pnpm --filter @repobrain/mcp-server start"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "turbo": "latest",
+    "typescript": "latest"
+  }
+}

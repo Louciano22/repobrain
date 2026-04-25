@@ -1,0 +1,26 @@
+{
+  "name": "@repobrain/cli",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "repobrain": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@repobrain/config": "workspace:*",
+    "@repobrain/core": "workspace:*",
+    "@repobrain/graph": "workspace:*",
+    "@repobrain/indexer": "workspace:*",
+    "@repobrain/providers": "workspace:*",
+    "@repobrain/retrieval": "workspace:*",
+    "@repobrain/session-memory": "workspace:*",
+    "@repobrain/shared-types": "workspace:*",
+    "@repobrain/storage": "workspace:*",
+    "@repobrain/taxonomy": "workspace:*"
+  }
+}
