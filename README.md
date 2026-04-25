@@ -6,7 +6,7 @@ RepoBrain is local-first, architecture-aware, model-agnostic repo intelligence f
 
 ## Current MVP
 
-RepoBrain is source is currently source-first and not yet packaged for npm. The current MVP includes working local indexing, hybrid search, context pack generation, taxonomy/map output, critical-path scoring, trace/replay, CLI workflows, stdio MCP tools, local UI pages, structured ranking factors, and regression tests.
+RepoBrain is currently source-first and not yet packaged for npm. The current MVP includes working local indexing, hybrid search, context pack generation, taxonomy/map output, critical-path scoring, trace/replay, CLI workflows, stdio MCP tools, local UI pages, structured ranking factors, and regression tests.
 Packages are still marked `private` and are not configured for npm publishing yet.
 
 ## Why It Exists
