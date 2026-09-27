@@ -8,7 +8,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "check": "tsc -p tsconfig.json --noEmit",
-    "test": "node dist/smoke.test.js && node dist/stdio.test.js && node dist/benchmark.test.js && node dist/ranking-eval.test.js && node dist/heldout-eval.test.js && node dist/indexer-safety.test.js && node dist/private-eval.test.js && node dist/cli-search.test.js && node dist/retrieval-noise.test.js",
+    "test": "node dist/smoke.test.js && node dist/stdio.test.js && node dist/benchmark.test.js && node dist/ranking-eval.test.js && node dist/heldout-eval.test.js && node dist/indexer-safety.test.js && node dist/private-eval.test.js && node dist/cli-search.test.js && node dist/retrieval-noise.test.js && node dist/file-search.test.js",
     "private-eval": "node dist/private-eval-cli.js"
   },
   "dependencies": {
