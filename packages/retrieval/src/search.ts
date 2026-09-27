@@ -347,6 +347,15 @@ function uniqueResults(results: RetrievalResult[]): RetrievalResult[] {
   });
 }
 
+function oneResultPerFile(results: RetrievalResult[]): RetrievalResult[] {
+  const seen = new Set<string>();
+  return results.filter((result) => {
+    if (seen.has(result.chunk.path)) return false;
+    seen.add(result.chunk.path);
+    return true;
+  });
+}
+
 function scoreChunk(query: string, chunk: RepoChunkRecord, semanticEnabled: boolean, queryEmbedding: number[], allPaths: Set<string>): RetrievalResult | null {
   const queryTerms = terms(query);
   const haystack = `${chunk.path}\n${chunk.symbols.join(" ")}\n${chunk.content}`.toLowerCase();
@@ -409,6 +418,7 @@ export function searchCodebase(params: {
   query: string;
   limit?: number;
   mode?: "exact" | "hybrid";
+  resultUnit?: "chunk" | "file";
 }): SearchResult {
   const paths = resolveProjectPaths(params.repoRoot ?? process.cwd());
   const store = readLocalStore(paths.storePath);
@@ -418,12 +428,14 @@ export function searchCodebase(params: {
   const mode = params.mode ?? "hybrid";
   const semantic = mode === "hybrid" ? semanticRuntime(paths.repoRoot) : { enabled: false, providerId: "exact", fallbackReason: "Exact mode requested." };
   const queryEmbedding = semantic.enabled ? localEmbedding(params.query) : [];
-  const results = uniqueResults(
+  const ranked = uniqueResults(
     chunks
       .map((chunk) => scoreChunk(params.query, chunk, semantic.enabled, queryEmbedding, allPaths))
       .filter((result): result is RetrievalResult => Boolean(result))
-      .sort((left, right) => right.score - left.score)
-  ).slice(0, params.limit ?? 10);
+      .sort((left, right) => right.score - left.score || left.chunk.path.localeCompare(right.chunk.path, "en") || left.chunk.id.localeCompare(right.chunk.id, "en"))
+  );
+  // Keep the highest scoring chunk as the excerpt for each file, before applying the result limit.
+  const results = (params.resultUnit === "file" ? oneResultPerFile(ranked) : ranked).slice(0, params.limit ?? 10);
 
   const semanticStatus = semantic.enabled ? "used" : "fallback";
   const event: RetrievalEventRecord = {

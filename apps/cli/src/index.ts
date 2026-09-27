@@ -288,13 +288,13 @@ if (knownCommand.name === "search") {
     process.exit(1);
   }
 
-  const result = searchCodebase({ repoRoot, query, limit: 8 });
+  const result = searchCodebase({ repoRoot, query, limit: 8, resultUnit: "file" });
   console.log("Cream Soda search");
   console.log(`Query: ${result.query}`);
   console.log(`Mode: ${result.mode}`);
   console.log(`Semantic: ${result.semanticStatus}`);
   console.log(`Results: ${result.results.length}`);
-  printSection("Top matches");
+  printSection("Top files (best matching excerpt per file)");
   for (const [index, item] of result.results.entries()) {
     console.log(`${index + 1}. ${formatLocation(item.chunk)} score=${item.score}`);
     console.log(`   Why: ${summarizeFactors(item.factors, item.reasons)}`);

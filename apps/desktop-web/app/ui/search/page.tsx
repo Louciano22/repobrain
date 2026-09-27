@@ -20,22 +20,22 @@ export default async function SearchPage({ searchParams }: PageProps) {
       <section className="shell-grid">
         <ShellState state="empty" title="No query yet" detail="Add ?q=your-symbol-or-topic to run local hybrid search." />
         <ShellState state="loading" title="Loading state" detail="Search results stream from local store reads." />
-        <ShellState state="success" title="Success state" detail="Results include score, file range, and inclusion reasons." />
+        <ShellState state="success" title="Success state" detail="Distinct files include score, best matching range, and inclusion reasons." />
       </section>
     );
   } else {
     try {
-      const result = searchCodebase({ repoRoot, query, limit: 12 });
+      const result = searchCodebase({ repoRoot, query, limit: 12, resultUnit: "file" });
       body =
         result.results.length === 0 ? (
-          <ShellState state="empty" title="No matches" detail={`No indexed chunks matched "${query}".`} />
+          <ShellState state="empty" title="No matches" detail={`No indexed files matched "${query}".`} />
         ) : (
           <section className="config-list">
             <ShellPanel title={`Results for "${result.query}"`}>
               <div className="metric-row">
                 <span>Mode: {result.mode}</span>
                 <span>Semantic: {result.semanticStatus}</span>
-                <span>Results: {result.results.length}</span>
+                <span>Files: {result.results.length} (best matching excerpt per file)</span>
               </div>
             </ShellPanel>
             {result.results.map((item, index) => (
