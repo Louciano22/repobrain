@@ -6,5 +6,6 @@ dist
 .env.local
 .env.*.local
 .repobrain
+private-evaluation/
 *.log
 .DS_Store

@@ -389,6 +389,19 @@ function scoreChunk(query: string, chunk: RepoChunkRecord, semanticEnabled: bool
   return { chunk, score, factors, reasons: factorReasons(factors) };
 }
 
+/** Scores all indexed chunks, returning the top unique file paths for file-level evaluation. */
+export function rankIndexedFiles(chunks: RepoChunkRecord[], query: string, limit: number): string[] {
+  if (!query.trim() || !Number.isSafeInteger(limit) || limit < 1 || limit > 100) {
+    throw new Error("Invalid read-only ranking request.");
+  }
+  const allPaths = new Set(chunks.map((chunk) => chunk.path));
+  const ranked = chunks
+    .map((chunk) => scoreChunk(query, chunk, false, [], allPaths))
+    .filter((result): result is RetrievalResult => Boolean(result))
+    .sort((left, right) => right.score - left.score || left.chunk.path.localeCompare(right.chunk.path, "en") || left.chunk.id.localeCompare(right.chunk.id, "en"));
+  return [...new Set(ranked.map((result) => result.chunk.path))].slice(0, limit);
+}
+
 export function searchCodebase(params: {
   repoRoot?: string;
   query: string;
