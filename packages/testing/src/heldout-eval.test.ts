@@ -5,7 +5,8 @@ import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { indexCodebase } from "@repobrain/indexer";
-import { searchCodebase } from "@repobrain/retrieval";
+import { rankIndexedFiles } from "@repobrain/retrieval";
+import type { RepoChunkRecord } from "@repobrain/shared-types";
 import { readLocalStore } from "@repobrain/storage";
 import { evaluateRanking, type RankingCase, type RankingReport } from "./benchmark.js";
 import { heldoutRepositories } from "./heldout-fixtures.js";
@@ -13,7 +14,7 @@ import { heldoutJudgments, type JudgedCase } from "./heldout-judgments.js";
 import { lexicalBaseline } from "./lexical-baseline.js";
 
 const K = 5;
-const suiteVersion = "public-evaluation-split.v1";
+const suiteVersion = "public-evaluation-split.v2";
 // Deliberate fixture updates require a new suite version and a reviewed digest change.
 const reviewedFixtureSha256 = "55972154a85e8b22dd753065eafba8221b64159a3f8969113ae023e3b782dc2d";
 
@@ -84,18 +85,22 @@ for (const fixture of heldoutRepositories) {
   try {
     writeFixture(root, fixture.files);
     const index = indexCodebase(root);
-    const indexedPaths = (readLocalStore(path.join(root, ".repobrain/store.json")).tables.repo_files as Array<{ path: string }>).map((file) => file.path);
+    const store = readLocalStore(path.join(root, ".repobrain/store.json"));
+    const indexedPaths = (store.tables.repo_files as Array<{ path: string }>).map((file) => file.path);
+    const chunks = store.tables.repo_chunks as RepoChunkRecord[];
     assert.ok(indexedPaths.length >= 8 && index.filesIndexed === indexedPaths.length);
     assert.ok(indexedPaths.every((filePath) => filePath in fixture.files));
     assert.ok(indexedPaths.every((filePath) => !filePath.includes("/dist/")), "Generated artifacts should be excluded.");
-    const indexedFiles = Object.fromEntries(indexedPaths.map((filePath) => [filePath, fixture.files[filePath]!]));
+    const indexedFiles: Record<string, string> = Object.create(null);
+    for (const chunk of chunks) indexedFiles[chunk.path] = `${indexedFiles[chunk.path] ?? ""}\n${chunk.content}`;
+    assert.deepEqual(Object.keys(indexedFiles).sort(), [...indexedPaths].sort());
     counts[fixture.id] = indexedPaths.length;
 
     for (const judgment of heldoutJudgments.filter((entry) => entry.repositoryId === fixture.id)) {
       assert.ok(judgment.relevantPaths.every((filePath) => indexedPaths.includes(filePath)));
-      const cream = searchCodebase({ repoRoot: root, query: judgment.query, limit: K, mode: "exact" });
+      const creamPaths = rankIndexedFiles(chunks, judgment.query, K);
       const basePaths = lexicalBaseline(indexedFiles, judgment.query).slice(0, K);
-      creamCases.push({ id: judgment.id, query: judgment.query, relevantPaths: judgment.relevantPaths, retrievedPaths: cream.results.map((result) => result.chunk.path) });
+      creamCases.push({ id: judgment.id, query: judgment.query, relevantPaths: judgment.relevantPaths, retrievedPaths: creamPaths });
       baselineCases.push({ id: judgment.id, query: judgment.query, relevantPaths: judgment.relevantPaths, retrievedPaths: basePaths });
     }
   } finally {

@@ -152,7 +152,7 @@ function terms(input: string): string[] {
 }
 
 function pathRole(filePath: string): string {
-  if (filePath.includes("test") || filePath.includes("spec")) return "test";
+  if (/(?:^|\/)(?:__tests__|tests?|specs?)(?:\/|$)|\.(?:test|spec)\.[a-z0-9]+$/i.test(filePath)) return "test";
   if (filePath.includes("/docs/") || filePath.endsWith(".md")) return "docs";
   if (filePath.includes("/ui/") || filePath.includes("app/") || filePath.endsWith(".tsx")) return "ui";
   if (filePath.includes("/shared-types/")) return "shared";
@@ -248,7 +248,8 @@ function pathWeight(queryTerms: string[], chunk: RepoChunkRecord, allPaths: Set<
     factors.push(scoreFactor({ kind: "path_role_match", label: `architecture role match: ${role}`, weight, value: role }));
   }
 
-  if (chunk.path.includes("/src/")) {
+  const implementationDirectory = /(?:^|\/)(?:src|lib)\//.test(chunk.path);
+  if (implementationDirectory && !["test", "docs", "ui"].includes(role)) {
     score += 8;
     factors.push(scoreFactor({ kind: "source_implementation", label: "source-of-truth implementation file", weight: 8 }));
   }
@@ -363,7 +364,8 @@ function scoreChunk(query: string, chunk: RepoChunkRecord, semanticEnabled: bool
   for (const term of queryTerms) {
     const matches = haystack.split(term).length - 1;
     if (matches > 0) {
-      const weight = matches * 3;
+      // A repeated word in one long file should not swamp several distinct matches in a concise source file.
+      const weight = Math.min(matches, 4) * 3;
       score += weight;
       factors.push(scoreFactor({ kind: "keyword_match", label: `matched query term: ${term}`, weight, value: term }));
     }
