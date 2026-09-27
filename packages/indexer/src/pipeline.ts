@@ -264,7 +264,7 @@ export function indexCodebase(repoRoot: string = process.cwd()): IndexResult {
   const store = readLocalStore(init.storePath);
   const project = (store.tables.repo_projects as RepoProjectRecord[])[0];
   if (!project) {
-    throw new Error("RepoBrain project record is missing from the local store.");
+    throw new Error("Cream Soda project record is missing from the local store.");
   }
   const ignorePatterns = [...new Set([...DEFAULT_IGNORE_PATTERNS, ...(config.ignorePatterns ?? []), ...readGitignore(init.repoRoot)])];
   const sensitivePathPatterns = [...new Set([...DEFAULT_SENSITIVE_PATH_PATTERNS, ...(config.sensitivePathPatterns ?? [])])];

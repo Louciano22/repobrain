@@ -47,7 +47,7 @@ export default function RepoMapPage() {
       <ShellState
         state="error"
         title="Repo map unavailable"
-        detail={error instanceof Error ? error.message : "RepoBrain taxonomy failed safely."}
+        detail={error instanceof Error ? error.message : "Cream Soda taxonomy failed safely."}
       />
     );
   }

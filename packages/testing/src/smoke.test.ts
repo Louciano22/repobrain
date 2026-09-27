@@ -116,7 +116,7 @@ withTempRepo((repo) => {
   if (uiPosition >= 0) assert.ok(providerPosition < uiPosition);
   if (testPosition >= 0) assert.ok(providerPosition < testPosition);
   const criticalPath = runNode([cliPath, "critical-path", "provider changes"], repo);
-  assert.match(criticalPath, /RepoBrain critical path/);
+  assert.match(criticalPath, /Cream Soda critical path/);
   assert.match(criticalPath, /Query: provider changes/);
   assert.match(criticalPath, /factors=/);
   assert.match(criticalPath, /packages\/providers\/src\/resolver\.ts|packages\/providers\/src\/registry\.ts/);
@@ -147,4 +147,4 @@ const missing = JSON.parse(
 assert.equal(missing.ok, false);
 assert.equal(missing.error.code, "REPO_NOT_FOUND");
 
-console.log("RepoBrain smoke tests passed");
+console.log("Cream Soda smoke tests passed");

@@ -26,13 +26,13 @@ function parseConfig(raw: string, configPath: string): RepoBrainLocalConfig {
   try {
     return JSON.parse(raw) as RepoBrainLocalConfig;
   } catch {
-    throw new RuntimeBoundaryError("CONFIG_INVALID", `RepoBrain config is not valid JSON: ${configPath}`);
+    throw new RuntimeBoundaryError("CONFIG_INVALID", `Cream Soda config is not valid JSON: ${configPath}`);
   }
 }
 
 function validateConfig(config: RepoBrainLocalConfig): RepoBrainLocalConfig {
   if (config.version !== 1 || !Array.isArray(config.allowedRoots)) {
-    throw new RuntimeBoundaryError("CONFIG_INVALID", "RepoBrain config must include version 1 and allowedRoots.");
+    throw new RuntimeBoundaryError("CONFIG_INVALID", "Cream Soda config must include version 1 and allowedRoots.");
   }
 
   return {
@@ -49,7 +49,7 @@ export function loadRepoBrainConfig(params: {
   const configPath = path.resolve(params.configPath || resolveConfigPath(params.env));
 
   if (!fs.existsSync(configPath)) {
-    throw new RuntimeBoundaryError("CONFIG_NOT_FOUND", `RepoBrain config not found: ${configPath}`);
+    throw new RuntimeBoundaryError("CONFIG_NOT_FOUND", `Cream Soda config not found: ${configPath}`);
   }
 
   return validateConfig(parseConfig(fs.readFileSync(configPath, "utf8"), configPath));

@@ -13,8 +13,8 @@ import { initializeProject, readLocalStore, resolveProjectPaths } from "@repobra
 import { buildArchitectureMap } from "@repobrain/taxonomy";
 
 const commands: ShellCommand[] = [
-  { name: "init", description: "Create a local RepoBrain config shell." },
-  { name: "index", description: "Index a local repository into the RepoBrain store." },
+  { name: "init", description: "Create a local Cream Soda config shell." },
+  { name: "index", description: "Index a local repository into the Cream Soda store." },
   { name: "search", description: "Run local hybrid retrieval over the repo index." },
   { name: "context", description: "Generate a budgeted local context pack." },
   { name: "map", description: "Build and inspect local taxonomy and dependency map." },
@@ -26,15 +26,15 @@ const commands: ShellCommand[] = [
 
 process.on("uncaughtException", (error) => {
   const safe = toSafeRuntimeError(error);
-  console.error(`RepoBrain error [${safe.code}]: ${safe.message}`);
+  console.error(`Cream Soda error [${safe.code}]: ${safe.message}`);
   process.exit(1);
 });
 
 function printHelp() {
-  console.log("RepoBrain CLI");
+  console.log("Cream Soda CLI");
   console.log("");
   console.log("Usage:");
-  console.log("  repobrain <command>");
+  console.log("  creamsoda <command>  (legacy alias: repobrain)");
   console.log("");
   console.log("Commands:");
   for (const command of commands) {
@@ -182,7 +182,7 @@ if (!command || command === "--help" || command === "-h") {
 const knownCommand = commands.find((item) => item.name === command);
 
 if (!knownCommand) {
-  console.error(`Unknown RepoBrain command: ${command}`);
+  console.error(`Unknown Cream Soda command: ${command}`);
   printHelp();
   process.exit(1);
 }
@@ -191,7 +191,7 @@ if (knownCommand.name === "init") {
   const repoRoot = path.resolve(args[0] ?? process.cwd());
   const result = initializeProject(repoRoot);
 
-  console.log(result.created ? "RepoBrain project initialized" : "RepoBrain project already initialized");
+  console.log(result.created ? "Cream Soda project initialized" : "Cream Soda project already initialized");
   console.log(`Repo root: ${result.repoRoot}`);
   console.log(`Project dir: ${result.projectDir}`);
   console.log(`Config: ${result.configPath}`);
@@ -243,7 +243,7 @@ if (knownCommand.name === "config") {
   const safeConfig = toSafeRepoBrainConfig(config);
   const resolutions = resolveAllProviders(config);
 
-  console.log("RepoBrain config");
+  console.log("Cream Soda config");
   console.log(`Repo root: ${repoRoot}`);
   console.log(`Config: ${projectPaths.configPath}`);
   console.log(`Allowed roots: ${safeConfig.allowedRoots.length}`);
@@ -270,7 +270,7 @@ if (knownCommand.name === "index") {
   const repoRoot = path.resolve(args[0] ?? process.cwd());
   const result = indexCodebase(repoRoot);
 
-  console.log("RepoBrain index complete");
+  console.log("Cream Soda index complete");
   console.log(`Repo root: ${result.repoRoot}`);
   console.log(`Files: ${result.filesIndexed}`);
   console.log(`Chunks: ${result.chunksIndexed}`);
@@ -288,7 +288,7 @@ if (knownCommand.name === "search") {
   }
 
   const result = searchCodebase({ repoRoot, query, limit: 8 });
-  console.log("RepoBrain search");
+  console.log("Cream Soda search");
   console.log(`Query: ${result.query}`);
   console.log(`Mode: ${result.mode}`);
   console.log(`Semantic: ${result.semanticStatus}`);
@@ -316,7 +316,7 @@ if (knownCommand.name === "context") {
   }
 
   const result = buildContextPack({ repoRoot, query, mode: modeArg });
-  console.log("RepoBrain context pack");
+  console.log("Cream Soda context pack");
   console.log(`ID: ${result.pack.id}`);
   console.log(`Query: ${result.pack.query}`);
   console.log(`Mode: ${result.pack.mode}`);
@@ -341,7 +341,7 @@ if (knownCommand.name === "map") {
   const repoRoot = path.resolve(args[0] ?? process.cwd());
   const result = buildArchitectureMap(repoRoot);
 
-  console.log("RepoBrain architecture map");
+  console.log("Cream Soda architecture map");
   console.log(`Files: ${result.summary.files}`);
   console.log(`Zones: safe=${result.summary.safe} core=${result.summary.core} danger=${result.summary.danger}`);
   console.log(`Edges: ${result.edges.length}`);
@@ -362,7 +362,7 @@ if (knownCommand.name === "critical-path") {
   const repoRoot = path.resolve(stringFlag(parsed.flags, "repo") ?? process.cwd());
   const result = getCriticalPath(repoRoot, query);
 
-  console.log("RepoBrain critical path");
+  console.log("Cream Soda critical path");
   if (query) console.log(`Query: ${query}`);
   console.log(`Generated: ${result.generatedAt}`);
   console.log(`Central files: ${result.centralFiles.length}`);
@@ -398,7 +398,7 @@ if (knownCommand.name === "trace") {
     const projectPaths = resolveProjectPaths(repoRoot);
     const store = readLocalStore(projectPaths.storePath);
     const chunks = (store.tables.repo_chunks as RepoChunkRecord[]).filter((chunk) => latestPack.chunkIds.includes(chunk.id));
-    console.log("RepoBrain trace replay");
+    console.log("Cream Soda trace replay");
     console.log(`Context pack: ${latestPack.id}`);
     console.log(`Query: ${latestPack.query}`);
     console.log(`Mode: ${latestPack.mode}`);
@@ -419,7 +419,7 @@ if (knownCommand.name === "trace") {
   const repoRoot = path.resolve(args[0] ?? process.cwd());
   const result = getSessionTrace(repoRoot);
 
-  console.log("RepoBrain session trace");
+  console.log("Cream Soda session trace");
   console.log(`Retrieval events: ${result.retrievalEvents.length}`);
   console.log(`Context packs: ${result.contextPacks.length}`);
   console.log(`Trace events: ${result.traceEvents.length}`);
@@ -439,7 +439,7 @@ if (knownCommand.name === "status") {
   const store = readLocalStore(projectPaths.storePath);
   const health = getIndexHealth(repoRoot);
 
-  console.log("RepoBrain status");
+  console.log("Cream Soda status");
   console.log(`Repo root: ${repoRoot}`);
   console.log(`Project dir: ${projectPaths.projectDir}`);
   console.log(`Files: ${store.tables.repo_files.length}`);
@@ -452,5 +452,5 @@ if (knownCommand.name === "status") {
   process.exit(0);
 }
 
-console.log(`RepoBrain ${knownCommand.name} shell`);
+console.log(`Cream Soda ${knownCommand.name} shell`);
 console.log(knownCommand.description);

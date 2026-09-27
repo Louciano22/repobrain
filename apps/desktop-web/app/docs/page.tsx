@@ -7,7 +7,7 @@ export default function DocsPage() {
         <Link href="/" className="brand">
           <span className="brand-mark">RB</span>
           <span>
-            <strong>RepoBrain Docs</strong>
+            <strong>Cream Soda Docs</strong>
             <small>install · configure · integrate</small>
           </span>
         </Link>
@@ -22,7 +22,7 @@ export default function DocsPage() {
         <p className="eyebrow">Docs home</p>
         <h1>Local repo memory for AI coding agents.</h1>
         <p className="hero-copy">
-          RepoBrain is local-first, architecture-aware, model-agnostic repo intelligence. Start with init and indexing,
+          Cream Soda is local-first, architecture-aware, model-agnostic repository intelligence. Start with init and indexing,
           then use ranked retrieval, context packs, critical-path hints, and trace views.
         </p>
         <div className="cta-row">
@@ -50,7 +50,7 @@ pnpm --filter @repobrain/cli exec node dist/index.js index .`}</pre>
           <p className="eyebrow">Use</p>
           <h2>CLI and MCP first.</h2>
           <p>
-            RepoBrain is designed for coding-agent workflows: initialize local state, inspect ranked explanations, then
+            Cream Soda is designed for coding-agent workflows: initialize local state, inspect ranked explanations, then
             connect the stdio MCP server or JSON runner to request bounded repo context.
           </p>
         </article>

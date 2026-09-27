@@ -111,7 +111,7 @@ function appendSessionMemory(params: {
   const run: SessionRunRecord = (params.store.tables.session_runs as SessionRunRecord[])[0] ?? {
     id: `run_${Date.now()}`,
     projectId: params.projectId,
-    title: "Local RepoBrain session",
+    title: "Local Cream Soda session",
     startedAt: now
   };
   params.store.tables.session_runs = [

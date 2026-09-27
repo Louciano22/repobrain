@@ -27,13 +27,13 @@ function writeJsonIfMissing(filePath: string, value: unknown): boolean {
 
 export function readLocalStore(storePath: string): LocalStoreSnapshot {
   if (!fs.existsSync(storePath)) {
-    throw new RuntimeBoundaryError("CONFIG_NOT_FOUND", `RepoBrain local store not found: ${storePath}`);
+    throw new RuntimeBoundaryError("CONFIG_NOT_FOUND", `Cream Soda local store not found: ${storePath}`);
   }
 
   try {
     return JSON.parse(fs.readFileSync(storePath, "utf8")) as LocalStoreSnapshot;
   } catch {
-    throw new RuntimeBoundaryError("CONFIG_INVALID", `RepoBrain local store is not valid JSON: ${storePath}`);
+    throw new RuntimeBoundaryError("CONFIG_INVALID", `Cream Soda local store is not valid JSON: ${storePath}`);
   }
 }
 
@@ -74,7 +74,7 @@ function ensureProjectRecord(params: {
 export function initializeProject(repoRoot: string = process.cwd()): ProjectInitResult {
   const paths = resolveProjectPaths(repoRoot);
   if (!fs.existsSync(paths.repoRoot) || !fs.statSync(paths.repoRoot).isDirectory()) {
-    throw new RuntimeBoundaryError("REPO_NOT_FOUND", `RepoBrain repo root does not exist or is not a directory: ${paths.repoRoot}`);
+    throw new RuntimeBoundaryError("REPO_NOT_FOUND", `Cream Soda repo root does not exist or is not a directory: ${paths.repoRoot}`);
   }
 
   fs.mkdirSync(paths.projectDir, { recursive: true });

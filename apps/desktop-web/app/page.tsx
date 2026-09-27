@@ -20,10 +20,10 @@ export default function HomePage() {
     <main className="marketing-shell">
       <header className="marketing-nav">
         <Link href="/" className="brand">
-          <span className="brand-mark">RB</span>
+          <span className="brand-mark">CS</span>
           <span>
-            <strong>RepoBrain</strong>
-            <small>local-first repo intelligence</small>
+            <strong>Cream Soda</strong>
+            <small>repository intelligence by LouChi AI</small>
           </span>
         </Link>
         <nav>
@@ -37,7 +37,7 @@ export default function HomePage() {
         <p className="eyebrow">Local-first · model-agnostic · open-source</p>
         <h1>Stop making coding agents rediscover your repo.</h1>
         <p className="hero-copy">
-          RepoBrain is local-first, architecture-aware, model-agnostic repo intelligence for AI coding agents working in
+          Cream Soda is local-first, architecture-aware, model-agnostic repository intelligence for AI coding agents working in
           real codebases.
         </p>
         <div className="cta-row">
@@ -66,7 +66,7 @@ export default function HomePage() {
           <p className="eyebrow">Trust model</p>
           <h2>Local runtime first.</h2>
           <p>
-            RepoBrain starts from a project-local store, explicit provider configuration, and safe filesystem boundaries.
+            Cream Soda starts from a project-local store, explicit provider configuration, and safe filesystem boundaries.
             Remote providers are optional, never assumed.
           </p>
         </article>

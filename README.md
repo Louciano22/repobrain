@@ -1,17 +1,19 @@
-# RepoBrain
+# Cream Soda
+
+> Cream Soda is the new name for RepoBrain. Existing `repobrain` commands, `@repobrain/*` packages, `.repobrain/` data, and `REPOBRAIN_*` environment variables remain supported during the compatibility period.
 
 **Stop making AI coding agents rediscover your repo every session.**
 
-RepoBrain is local-first, architecture-aware, model-agnostic repo intelligence for AI coding agents. It indexes a real codebase into a project-local memory layer, then exposes ranked search, context packs, critical-path hints, trace data, and MCP tools without hidden cloud sync.
+Cream Soda is repository intelligence by LouChi AI: local-first, architecture-aware, and model-agnostic. It indexes a real codebase into a project-local memory layer, then exposes ranked search, context packs, critical-path hints, trace data, and MCP tools without hidden cloud sync.
 
 ## Current MVP
 
-RepoBrain is currently source-first and not yet packaged for npm. The current MVP includes working local indexing, hybrid search, context pack generation, taxonomy/map output, critical-path scoring, trace/replay, CLI workflows, stdio MCP tools, local UI pages, structured ranking factors, and regression tests.
+Cream Soda is currently source-first and not yet packaged for npm. The current MVP includes working local indexing, hybrid search, context pack generation, taxonomy/map output, critical-path scoring, trace/replay, CLI workflows, stdio MCP tools, local UI pages, structured ranking factors, and regression tests.
 Packages are still marked `private` and are not configured for npm publishing yet.
 
 ## Why It Exists
 
-Coding agents waste time and tokens relearning the same repo shape: where provider logic lives, which files are central, what code is risky, which paths should be ignored, and what context belongs in a task prompt. RepoBrain gives agents a compact, explainable repo memory so every session does not start from zero.
+Coding agents waste time and tokens relearning the same repo shape: where provider logic lives, which files are central, what code is risky, which paths should be ignored, and what context belongs in a task prompt. Cream Soda gives agents a compact, explainable repo memory so every session does not start from zero.
 
 ## What It Does
 
@@ -26,7 +28,7 @@ Coding agents waste time and tokens relearning the same repo shape: where provid
 
 ## Quickstart
 
-Requirements: Node.js 22+, pnpm 10+, and a local repo you want RepoBrain to inspect.
+Requirements: Node.js 22+, pnpm 10+, and a local repo you want Cream Soda to inspect.
 
 ```bash
 pnpm install
@@ -71,7 +73,7 @@ node apps/cli/dist/index.js search "where is provider resolution handled"
 ```
 
 ```text
-RepoBrain search
+Cream Soda search
 Query: where is provider resolution handled
 Mode: hybrid
 Semantic: fallback
@@ -89,7 +91,7 @@ node apps/cli/dist/index.js context "add a new provider" --mode balanced
 ```
 
 ```text
-RepoBrain context pack
+Cream Soda context pack
 Query: add a new provider
 Mode: balanced
 Tokens: 1602/3600
@@ -106,7 +108,7 @@ node apps/cli/dist/index.js critical-path "provider changes"
 ```
 
 ```text
-RepoBrain critical path
+Cream Soda critical path
 Query: provider changes
 Central files: 12
 Likely blockers: 10
@@ -125,7 +127,7 @@ node apps/cli/dist/index.js trace
 ```
 
 ```text
-RepoBrain session trace
+Cream Soda session trace
 Retrieval events: 3
 Context packs: 2
 Trace events: 63
@@ -135,7 +137,7 @@ Session steps: 66
 
 ## MCP Overview
 
-RepoBrain exposes a stdio MCP transport for agent hosts and keeps a local JSON runner for smoke tests. Each tool returns a versioned `mcp.v1` envelope with `ok`, `tool`, `sessionId`, `requestId`, `data`, and `meta` fields.
+Cream Soda exposes a stdio MCP transport for agent hosts and keeps a local JSON runner for smoke tests. Each tool returns a versioned `mcp.v1` envelope with `ok`, `tool`, `sessionId`, `requestId`, `data`, and `meta` fields.
 
 ```bash
 pnpm --filter @repobrain/mcp-server start
@@ -151,7 +153,7 @@ Tools in scope: `index_codebase`, `search_code`, `get_context_pack`, `get_archit
 
 ## Why Not Just Use Code Search?
 
-Code search finds text. RepoBrain adds local repo memory around that text: architecture roles, danger-zone hints, dependency-aware critical paths, token-budgeted context packs, session traces, and explainable ranking factors. The goal is not to replace grep. The goal is to give coding agents a compact, trusted view of what matters for a task.
+Code search finds text. Cream Soda adds local repo memory around that text: architecture roles, danger-zone hints, dependency-aware critical paths, token-budgeted context packs, session traces, and explainable ranking factors. The goal is not to replace grep. The goal is to give coding agents a compact, trusted view of what matters for a task.
 
 ## How It Works
 
@@ -163,7 +165,7 @@ Code search finds text. RepoBrain adds local repo memory around that text: archi
 
 ## Architecture Snapshot
 
-RepoBrain is a pnpm/Turborepo workspace with local UI and docs apps plus focused packages for config, storage, providers, indexing, retrieval, taxonomy, graph analysis, session memory, observability, orchestration, shared types, UI primitives, and testing.
+Cream Soda is a pnpm/Turborepo workspace with local UI and docs apps plus focused packages for config, storage, providers, indexing, retrieval, taxonomy, graph analysis, session memory, observability, orchestration, shared types, UI primitives, and testing.
 
 Runtime surfaces:
 
@@ -176,7 +178,7 @@ Runtime surfaces:
 
 Start from `.env.example`. Provider keys are optional for the MVP; when missing, retrieval remains local and marks remote semantic behavior as `fallback`. Configure `local-embedding` to enable deterministic local semantic scoring without a cloud call.
 
-RepoBrain stores project metadata in `.repobrain/` and ignores that directory by default. It is designed around explicit local paths, ignored/sensitive path rules, UI-safe config exposure, and redacted provider secret handling. There is no silent cloud sync in the MVP.
+Cream Soda stores project metadata in the legacy-compatible `.repobrain/` directory and ignores that directory by default. It is designed around explicit local paths, ignored/sensitive path rules, UI-safe config exposure, and redacted provider secret handling. There is no silent cloud sync in the MVP.
 
 ## Roadmap
 

@@ -57,7 +57,7 @@ export default async function SearchPage({ searchParams }: PageProps) {
         <ShellState
           state="error"
           title="Search unavailable"
-          detail={error instanceof Error ? error.message : "RepoBrain search failed safely."}
+          detail={error instanceof Error ? error.message : "Cream Soda search failed safely."}
         />
       );
     }

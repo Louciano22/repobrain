@@ -1,9 +1,9 @@
 {
-  "name": "repobrain",
+  "name": "cream-soda",
   "version": "0.1.0",
   "private": true,
   "packageManager": "pnpm@10.28.2",
-  "description": "Local-first repo intelligence platform and MCP server workspace.",
+  "description": "Cream Soda — repository intelligence by LouChi AI.",
   "scripts": {
     "build": "turbo build",
     "check": "turbo check",
