@@ -137,6 +137,8 @@ Session steps: 66
 
 ## MCP Overview
 
+When using stdio MCP, launch the server from the authorized repository root. Stdio rejects selection of a different root argument and forces tool calls to the launch root; this is not yet a filesystem sandbox. Agents cannot call `clear_index` through stdio. See [MCP trust boundary](docs/mcp-trust-boundary.md) for remaining limitations. Do not run this first hardening slice against untrusted repositories with access to unrelated private files.
+
 Cream Soda exposes a stdio MCP transport for agent hosts and keeps a local JSON runner for smoke tests. Each tool returns a versioned `mcp.v1` envelope with `ok`, `tool`, `sessionId`, `requestId`, `data`, and `meta` fields.
 
 ```bash
@@ -149,7 +151,7 @@ pnpm --filter @repobrain/mcp-server exec node dist/index.js \
   --mode quick
 ```
 
-Tools in scope: `index_codebase`, `search_code`, `get_context_pack`, `get_architecture_map`, `get_critical_path`, `explain_retrieval`, `get_session_trace`, `get_index_status`, and `clear_index`.
+Stdio tools in scope: `index_codebase`, `search_code`, `get_context_pack`, `get_architecture_map`, `get_critical_path`, `explain_retrieval`, `get_session_trace`, and `get_index_status`. The operator-facing local runner additionally exposes `clear_index`.
 
 ## Why Not Just Use Code Search?
 

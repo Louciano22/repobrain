@@ -8,6 +8,7 @@ import { searchCodebase } from "@repobrain/retrieval";
 import type { CriticalPathHint, RetrievalResult, ScoreFactorKind } from "@repobrain/shared-types";
 import { initializeProject } from "@repobrain/storage";
 import { buildArchitectureMap } from "@repobrain/taxonomy";
+import { evaluateRanking, type RankingCase } from "./benchmark.js";
 
 function writeFile(repo: string, relativePath: string, content: string): void {
   const absolutePath = path.join(repo, relativePath);
@@ -80,13 +81,20 @@ function expectFactor(result: RetrievalResult | CriticalPathHint, kind: ScoreFac
 }
 
 withEvalRepo((repo) => {
+  const benchmarkCases: RankingCase[] = [];
+  function record(id: string, query: string, relevantPaths: string[], results: RetrievalResult[]): void {
+    benchmarkCases.push({ id, query, relevantPaths, retrievedPaths: paths(results) });
+  }
+
   const providerAdd = searchCodebase({ repoRoot: repo, query: "add a new provider", limit: 10 }).results;
+  record("add-provider", "add a new provider", ["packages/providers/src/resolver.ts", "packages/providers/src/registry.ts"], providerAdd);
   expectInTop(providerAdd, "packages/providers/src/resolver.ts", 3);
   expectInTop(providerAdd, "packages/providers/src/registry.ts", 5);
   expectBefore(paths(providerAdd), "packages/providers/src/resolver.ts", "apps/desktop-web/app/ui/config/page.tsx");
   expectBefore(paths(providerAdd), "packages/providers/src/resolver.ts", "packages/testing/src/provider.test.ts");
 
   const providerResolution = searchCodebase({ repoRoot: repo, query: "where is provider resolution handled", limit: 10 }).results;
+  record("resolve-provider", "where is provider resolution handled", ["packages/providers/src/resolver.ts"], providerResolution);
   expectInTop(providerResolution, "packages/providers/src/resolver.ts", 3);
   expectBefore(paths(providerResolution), "packages/providers/src/resolver.ts", "packages/providers/src/resolver.js");
   expectBefore(paths(providerResolution), "packages/providers/src/resolver.ts", "packages/providers/src/resolver.d.ts");
@@ -94,18 +102,23 @@ withEvalRepo((repo) => {
   expectFactor(providerResolution[0]!, "source_implementation");
 
   const storage = searchCodebase({ repoRoot: repo, query: "change storage schema", limit: 10 }).results;
+  record("storage-schema", "change storage schema", ["packages/storage/src/project-store.ts"], storage);
   expectInTop(storage, "packages/storage/src/project-store.ts", 3);
 
   const mcp = searchCodebase({ repoRoot: repo, query: "debug MCP tool", limit: 10 }).results;
+  record("debug-mcp", "debug MCP tool", ["apps/mcp-server/src/index.ts"], mcp);
   expectInTop(mcp, "apps/mcp-server/src/index.ts", 3);
 
   const config = searchCodebase({ repoRoot: repo, query: "config loading", limit: 10 }).results;
+  record("config-loading", "config loading", ["packages/config/src/local-config.ts"], config);
   expectInTop(config, "packages/config/src/local-config.ts", 3);
 
   const trace = searchCodebase({ repoRoot: repo, query: "trace retrieval events", limit: 10 }).results;
+  record("trace-retrieval", "trace retrieval events", ["packages/session-memory/src/trace.ts"], trace);
   expectInTop(trace, "packages/session-memory/src/trace.ts", 5);
 
   const indexing = searchCodebase({ repoRoot: repo, query: "index symbol extraction", limit: 10 }).results;
+  record("index-symbols", "index symbol extraction", ["packages/indexer/src/pipeline.ts"], indexing);
   expectInTop(indexing, "packages/indexer/src/pipeline.ts", 3);
 
   const critical = getCriticalPath(repo, "provider changes").centralFiles;
@@ -116,6 +129,18 @@ withEvalRepo((repo) => {
   expectFactor(topProviderHint, "architecture_role");
   expectBefore(critical.map((hint) => hint.path), "packages/providers/src/resolver.ts", "packages/providers/src/resolver.js");
   expectBefore(critical.map((hint) => hint.path), "packages/providers/src/resolver.ts", "packages/providers/src/resolver.d.ts");
+
+  const report = evaluateRanking("synthetic-provider-repo.v1", benchmarkCases, 5);
+  assert.equal(report.caseCount, 7);
+  assert.equal(report.hitRateAtK, 1, "Every synthetic query must return a relevant file in top five.");
+  assert.ok(report.meanReciprocalRankAtK >= 0.85, "Synthetic MRR@5 regressed below the declared gate.");
+  const repeated = searchCodebase({ repoRoot: repo, query: "where is provider resolution handled", limit: 10 }).results;
+  assert.deepEqual(
+    repeated.map((result) => ({ path: result.chunk.path, score: result.score, factors: result.factors })),
+    providerResolution.map((result) => ({ path: result.chunk.path, score: result.score, factors: result.factors })),
+    "Repeated retrieval must preserve rank, scores, and factors."
+  );
+  console.log(`CREAMSODA_BENCHMARK_JSON=${JSON.stringify(report)}`);
 });
 
 console.log("Cream Soda ranking evaluation passed");

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { execFile } from "node:child_process";
+import fs from "node:fs";
 import path from "node:path";
 import { promisify } from "node:util";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
@@ -240,9 +241,9 @@ function parseLimit(): number | undefined {
   return Number.isFinite(parsed) && parsed > 0 ? Math.min(Math.floor(parsed), 50) : undefined;
 }
 
-function inputSchemaFor(contract: McpToolContract) {
+function inputSchemaFor(contract: McpToolContract, omitRepo = false) {
   const properties = Object.fromEntries(
-    contract.inputs.map((input) => [
+    contract.inputs.filter((input) => !(omitRepo && input.name === "repo")).map((input) => [
       input.name,
       {
         type: input.type === "number" ? "number" : "string",
@@ -255,7 +256,7 @@ function inputSchemaFor(contract: McpToolContract) {
   return {
     type: "object",
     properties,
-    required: contract.inputs.filter((input) => input.required).map((input) => input.name),
+    required: contract.inputs.filter((input) => input.required && !(omitRepo && input.name === "repo")).map((input) => input.name),
     additionalProperties: false
   };
 }
@@ -289,6 +290,10 @@ async function runToolProcess(tool: McpToolName, args: Record<string, unknown>):
 }
 
 async function startStdioServer(): Promise<void> {
+  // The host chooses the authorized repository by launching this server in that root.
+  // MCP tool arguments cannot enroll a different filesystem location.
+  const trustedRoot = fs.realpathSync(process.cwd());
+  const agentToolNames = TOOL_NAMES.filter((name) => name !== "clear_index");
   const server = new Server(
     {
       name: "cream-soda",
@@ -302,10 +307,10 @@ async function startStdioServer(): Promise<void> {
   );
 
   server.setRequestHandler(ListToolsRequestSchema, async () => ({
-    tools: TOOL_NAMES.map((name) => ({
+    tools: agentToolNames.map((name) => ({
       name,
       description: TOOL_CONTRACTS[name].description,
-      inputSchema: inputSchemaFor(TOOL_CONTRACTS[name])
+      inputSchema: inputSchemaFor(TOOL_CONTRACTS[name], true)
     }))
   }));
 
@@ -321,10 +326,10 @@ async function startStdioServer(): Promise<void> {
                 tool: "unknown",
                 sessionId: "mcp-stdio",
                 requestId: requestId(),
-                repoRoot: process.cwd(),
+                repoRoot: trustedRoot,
                 code: "TOOL_NOT_FOUND",
                 message: `Unknown Cream Soda MCP tool: ${toolName}`,
-                explanation: [`Available tools: ${TOOL_NAMES.join(", ")}`]
+                explanation: [`Available tools: ${agentToolNames.join(", ")}`]
               }),
               null,
               2
@@ -334,7 +339,47 @@ async function startStdioServer(): Promise<void> {
       };
     }
 
-    const envelope = await runToolProcess(toolName, (request.params.arguments ?? {}) as Record<string, unknown>);
+    if (toolName === "clear_index") {
+      return {
+        content: [{ type: "text", text: JSON.stringify(failure({
+          tool: toolName,
+          sessionId: "mcp-stdio",
+          requestId: requestId(),
+          repoRoot: trustedRoot,
+          code: "INVALID_INPUT",
+          message: "clear_index is not available to agents. Use the explicit local CLI workflow.",
+          explanation: ["Destructive index reset requires an operator action."]
+        })) }],
+        isError: true
+      };
+    }
+
+    const args = (request.params.arguments ?? {}) as Record<string, unknown>;
+    const requestedRepo = argString(args.repo);
+    let authorized = !requestedRepo;
+    if (requestedRepo) {
+      try {
+        authorized = fs.realpathSync(requestedRepo) === trustedRoot;
+      } catch {
+        authorized = false;
+      }
+    }
+    if (!authorized) {
+      return {
+        content: [{ type: "text", text: JSON.stringify(failure({
+          tool: toolName,
+          sessionId: "mcp-stdio",
+          requestId: requestId(),
+          repoRoot: trustedRoot,
+          code: "INVALID_INPUT",
+          message: "Repository is outside the trusted MCP root.",
+          explanation: ["Launch a separate Cream Soda server in the desired repository root."]
+        })) }],
+        isError: true
+      };
+    }
+
+    const envelope = await runToolProcess(toolName, { ...args, repo: trustedRoot });
     return {
       content: [
         {
@@ -354,7 +399,7 @@ if (process.argv.includes("--stdio")) {
 }
 
 const toolArg = getArg("--tool");
-if (toolArg) {
+if (toolArg && !process.argv.includes("--stdio")) {
   const repoRoot = path.resolve(getArg("--repo") ?? process.cwd());
   const sessionId = getArg("--session") ?? "mcp-local-default";
   const id = requestId();
@@ -782,9 +827,10 @@ if (toolArg) {
   }
 }
 
-const port = process.env.REPOBRAIN_MCP_PORT ?? "4827";
-
-console.log("Cream Soda MCP server shell");
-console.log(`Mode: local feature shell`);
-console.log(`Port: ${port}`);
-console.log(JSON.stringify({ version: "mcp.v1", tools: TOOL_CONTRACTS }, null, 2));
+if (!process.argv.includes("--stdio")) {
+  const port = process.env.REPOBRAIN_MCP_PORT ?? "4827";
+  console.log("Cream Soda MCP server shell");
+  console.log(`Mode: local feature shell`);
+  console.log(`Port: ${port}`);
+  console.log(JSON.stringify({ version: "mcp.v1", tools: TOOL_CONTRACTS }, null, 2));
+}
