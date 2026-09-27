@@ -19,7 +19,7 @@ export function assertWithinSafetyWindow(window: SafetyWindow): void {
   }
 
   if (current.count >= window.limit) {
-    throw new RuntimeBoundaryError("RATE_LIMITED", "RepoBrain safety guard rate limit reached.");
+    throw new RuntimeBoundaryError("RATE_LIMITED", "Cream Soda safety guard rate limit reached.");
   }
 
   current.count += 1;

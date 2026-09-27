@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "RepoBrain Docs | Local Repo Intelligence",
-  description: "Docs for RepoBrain, a local-first, architecture-aware repo intelligence layer for AI coding agents."
+  title: "Cream Soda Docs | Repository Intelligence",
+  description: "Docs for Cream Soda, repository intelligence by LouChi AI."
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

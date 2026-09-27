@@ -23,13 +23,13 @@ export function appendSessionStep(params: {
   const paths = resolveProjectPaths(params.repoRoot ?? process.cwd());
   const store = readLocalStore(paths.storePath);
   const project = (store.tables.repo_projects as RepoProjectRecord[])[0];
-  if (!project) throw new Error("RepoBrain project record is missing from the local store.");
+  if (!project) throw new Error("Cream Soda project record is missing from the local store.");
 
   const runId = params.sessionId ?? (store.tables.session_runs as SessionRunRecord[])[0]?.id ?? `run_${Date.now()}`;
   const run: SessionRunRecord = (store.tables.session_runs as SessionRunRecord[]).find((item) => item.id === runId) ?? {
     id: runId,
     projectId: project.id,
-    title: params.sessionId ? `MCP session ${params.sessionId}` : "Local RepoBrain session",
+    title: params.sessionId ? `MCP session ${params.sessionId}` : "Local Cream Soda session",
     startedAt: new Date().toISOString()
   };
   const step: SessionStepRecord = {

@@ -1,4 +1,4 @@
-# RepoBrain Release Smoke Test
+# Cream Soda Release Smoke Test
 
 Run this checklist before tagging a release or sharing a demo branch.
 

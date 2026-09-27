@@ -24,6 +24,6 @@ export function toSafeRuntimeError(error: unknown): SafeRuntimeError {
 
   return {
     code: "UNKNOWN_RUNTIME_ERROR",
-    message: "RepoBrain runtime boundary failed safely."
+    message: "Cream Soda runtime boundary failed safely."
   };
 }

@@ -79,17 +79,17 @@ export function assertPathAllowed(params: {
     .find((root) => resolvedCandidate === root || resolvedCandidate.startsWith(`${root}${path.sep}`));
 
   if (!matchedRoot) {
-    throw new RuntimeBoundaryError("PATH_OUTSIDE_ALLOWED_ROOTS", "Path is outside configured RepoBrain roots.");
+    throw new RuntimeBoundaryError("PATH_OUTSIDE_ALLOWED_ROOTS", "Path is outside configured Cream Soda roots.");
   }
 
   const relativePath = normalizeForMatch(path.relative(matchedRoot, resolvedCandidate));
 
   if (isIgnoredPath(relativePath, params.ignorePatterns)) {
-    throw new RuntimeBoundaryError("PATH_IGNORED", "Path matches RepoBrain ignored path policy.");
+    throw new RuntimeBoundaryError("PATH_IGNORED", "Path matches Cream Soda ignored path policy.");
   }
 
   if (isSensitivePath(relativePath, params.sensitivePathPatterns)) {
-    throw new RuntimeBoundaryError("PATH_SENSITIVE", "Path matches RepoBrain sensitive path policy.");
+    throw new RuntimeBoundaryError("PATH_SENSITIVE", "Path matches Cream Soda sensitive path policy.");
   }
 
   return resolvedCandidate;

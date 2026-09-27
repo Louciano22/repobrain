@@ -48,7 +48,7 @@ export default function SessionTracePage() {
       <ShellState
         state="error"
         title="Session trace unavailable"
-        detail={error instanceof Error ? error.message : "RepoBrain session trace failed safely."}
+        detail={error instanceof Error ? error.message : "Cream Soda session trace failed safely."}
       />
     );
   }

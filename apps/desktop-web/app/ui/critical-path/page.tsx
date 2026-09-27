@@ -85,7 +85,7 @@ export default async function CriticalPathPage({ searchParams }: PageProps) {
       <ShellState
         state="error"
         title="Critical path unavailable"
-        detail={error instanceof Error ? error.message : "RepoBrain critical-path generation failed safely."}
+        detail={error instanceof Error ? error.message : "Cream Soda critical-path generation failed safely."}
       />
     );
   }

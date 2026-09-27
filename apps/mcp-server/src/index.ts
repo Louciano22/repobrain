@@ -20,7 +20,7 @@ const execFileAsync = promisify(execFile);
 const TOOL_CONTRACTS: Record<McpToolName, McpToolContract> = {
   index_codebase: {
     name: "index_codebase",
-    description: "Index a local codebase into the project-local RepoBrain store.",
+    description: "Index a local codebase into the project-local Cream Soda store.",
     inputs: [
       { name: "repo", type: "string", required: false, description: "Repository root. Defaults to current working directory." },
       { name: "session", type: "string", required: false, description: "Explicit local MCP session id." }
@@ -291,7 +291,7 @@ async function runToolProcess(tool: McpToolName, args: Record<string, unknown>):
 async function startStdioServer(): Promise<void> {
   const server = new Server(
     {
-      name: "repobrain",
+      name: "cream-soda",
       version: "0.1.0"
     },
     {
@@ -323,7 +323,7 @@ async function startStdioServer(): Promise<void> {
                 requestId: requestId(),
                 repoRoot: process.cwd(),
                 code: "TOOL_NOT_FOUND",
-                message: `Unknown RepoBrain MCP tool: ${toolName}`,
+                message: `Unknown Cream Soda MCP tool: ${toolName}`,
                 explanation: [`Available tools: ${TOOL_NAMES.join(", ")}`]
               }),
               null,
@@ -367,7 +367,7 @@ if (toolArg) {
         requestId: id,
         repoRoot,
         code: "TOOL_NOT_FOUND",
-        message: `Unknown RepoBrain MCP tool: ${toolArg}`,
+        message: `Unknown Cream Soda MCP tool: ${toolArg}`,
         explanation: [`Available tools: ${TOOL_NAMES.join(", ")}`]
       })
     );
@@ -784,7 +784,7 @@ if (toolArg) {
 
 const port = process.env.REPOBRAIN_MCP_PORT ?? "4827";
 
-console.log("RepoBrain MCP server shell");
+console.log("Cream Soda MCP server shell");
 console.log(`Mode: local feature shell`);
 console.log(`Port: ${port}`);
 console.log(JSON.stringify({ version: "mcp.v1", tools: TOOL_CONTRACTS }, null, 2));

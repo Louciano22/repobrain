@@ -118,4 +118,4 @@ withEvalRepo((repo) => {
   expectBefore(critical.map((hint) => hint.path), "packages/providers/src/resolver.ts", "packages/providers/src/resolver.d.ts");
 });
 
-console.log("RepoBrain ranking evaluation passed");
+console.log("Cream Soda ranking evaluation passed");

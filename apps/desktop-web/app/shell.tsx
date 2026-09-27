@@ -27,13 +27,13 @@ export function AppShell({
     <main className="app-shell">
       <aside className="sidebar">
         <Link href="/" className="brand">
-          <span className="brand-mark">RB</span>
+          <span className="brand-mark">CS</span>
           <span>
-            <strong>RepoBrain</strong>
-            <small>local-first control plane</small>
+            <strong>Cream Soda</strong>
+            <small>repository intelligence</small>
           </span>
         </Link>
-        <nav aria-label="RepoBrain shell routes">
+        <nav aria-label="Cream Soda shell routes">
           {navItems.map((item) => (
             <Link key={item.href} href={item.href}>
               {item.label}

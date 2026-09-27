@@ -87,7 +87,7 @@ export default async function ContextPacksPage({ searchParams }: PageProps) {
         <ShellState
           state="error"
           title="Context generation unavailable"
-          detail={error instanceof Error ? error.message : "RepoBrain context pack generation failed safely."}
+          detail={error instanceof Error ? error.message : "Cream Soda context pack generation failed safely."}
         />
       );
     }

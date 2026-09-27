@@ -2,7 +2,7 @@ export default function DocsHomePage() {
   return (
     <main className="docs-shell">
       <nav className="docs-nav">
-        <strong>RepoBrain Docs</strong>
+        <strong>Cream Soda Docs</strong>
         <div>
           <a href="#what">What</a>
           <a href="#install">Install</a>
@@ -18,7 +18,7 @@ export default function DocsHomePage() {
         <p className="eyebrow">Local-first · model-agnostic · open-source</p>
         <h1>Stop making coding agents rediscover your repo.</h1>
         <p>
-          RepoBrain is local-first, architecture-aware, model-agnostic repo intelligence for AI coding agents. It exposes
+          Cream Soda is local-first, architecture-aware, model-agnostic repository intelligence for AI coding agents. It exposes
           ranked search, context packs, critical-path hints, trace data, and MCP tools from a project-local store.
         </p>
         <div className="docs-actions">
@@ -30,10 +30,10 @@ export default function DocsHomePage() {
 
       <section className="docs-grid" id="what">
         <article className="docs-panel">
-          <p className="eyebrow">What is RepoBrain?</p>
+          <p className="eyebrow">What is Cream Soda?</p>
           <h2>A local repo memory layer.</h2>
           <p>
-            RepoBrain indexes files, chunks, symbols, taxonomy labels, dependency edges, context packs, and traces into
+            Cream Soda indexes files, chunks, symbols, taxonomy labels, dependency edges, context packs, and traces into
             `.repobrain/` so agents can ask for bounded repo context.
           </p>
         </article>
@@ -50,7 +50,7 @@ export default function DocsHomePage() {
       <section className="docs-panel" id="install">
         <p className="eyebrow">Get started</p>
         <h2>Install from a workspace checkout.</h2>
-        <p>RepoBrain is currently source-distributed. Packages are private and not configured for npm publishing yet.</p>
+        <p>Cream Soda is currently source-distributed. Packages are private and not configured for npm publishing yet.</p>
         <pre>{`pnpm install
 pnpm build
 cp .env.example .env.local

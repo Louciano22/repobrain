@@ -161,7 +161,7 @@ export function buildArchitectureMap(repoRoot: string = process.cwd()): Architec
   const paths = resolveProjectPaths(repoRoot);
   const store = readLocalStore(paths.storePath);
   const project = (store.tables.repo_projects as RepoProjectRecord[])[0];
-  if (!project) throw new Error("RepoBrain project record is missing from the local store.");
+  if (!project) throw new Error("Cream Soda project record is missing from the local store.");
 
   const files = store.tables.repo_files as RepoFileRecord[];
   const chunks = store.tables.repo_chunks as RepoChunkRecord[];

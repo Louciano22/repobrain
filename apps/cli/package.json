@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "bin": {
+    "creamsoda": "./dist/index.js",
     "repobrain": "./dist/index.js"
   },
   "scripts": {
