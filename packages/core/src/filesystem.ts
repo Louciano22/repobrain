@@ -30,25 +30,37 @@ export const DEFAULT_SENSITIVE_PATH_PATTERNS = [
   "**/.env",
   "**/.env.*",
   "**/id_rsa",
+  "id_rsa",
   "**/id_ed25519",
+  "id_ed25519",
   "**/*.pem",
+  "*.pem",
   "**/*.key",
+  "*.key",
   "**/credentials.json",
-  "**/secrets.json"
+  "credentials.json",
+  "**/secrets.json",
+  "secrets.json"
 ];
 
 function normalizeForMatch(value: string): string {
   return value.replaceAll(path.sep, "/").replace(/^\.\//, "");
 }
 
+const compiledPatterns = new Map<string, RegExp>();
 function globToRegExp(pattern: string): RegExp {
   const normalized = normalizeForMatch(pattern);
+  const cached = compiledPatterns.get(normalized);
+  if (cached) return cached;
   const escaped = normalized
     .replace(/[.+^${}()|[\]\\]/g, "\\$&")
     .replaceAll("**", "__DOUBLE_STAR__")
     .replaceAll("*", "[^/]*")
     .replaceAll("__DOUBLE_STAR__", ".*");
-  return new RegExp(`^${escaped}$`);
+  const compiled = new RegExp(`^${escaped}$`);
+  if (compiledPatterns.size >= 1024) compiledPatterns.clear();
+  compiledPatterns.set(normalized, compiled);
+  return compiled;
 }
 
 export function matchesPathPattern(relativePath: string, patterns: string[]): boolean {
@@ -57,14 +69,14 @@ export function matchesPathPattern(relativePath: string, patterns: string[]): bo
 }
 
 export function isIgnoredPath(relativePath: string, patterns: string[] = DEFAULT_IGNORE_PATTERNS): boolean {
-  return matchesPathPattern(relativePath, patterns);
+  return matchesPathPattern(relativePath, DEFAULT_IGNORE_PATTERNS) || matchesPathPattern(relativePath, patterns);
 }
 
 export function isSensitivePath(
   relativePath: string,
   patterns: string[] = DEFAULT_SENSITIVE_PATH_PATTERNS
 ): boolean {
-  return matchesPathPattern(relativePath, patterns);
+  return matchesPathPattern(relativePath, DEFAULT_SENSITIVE_PATH_PATTERNS) || matchesPathPattern(relativePath, patterns);
 }
 
 export function assertPathAllowed(params: {
