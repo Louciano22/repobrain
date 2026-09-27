@@ -280,10 +280,11 @@ if (knownCommand.name === "index") {
 }
 
 if (knownCommand.name === "search") {
-  const query = args[0];
-  const repoRoot = path.resolve(args[1] ?? process.cwd());
+  const parsed = parseFlags(args);
+  const query = parsed.positionals[0];
+  const repoRoot = path.resolve(stringFlag(parsed.flags, "repo") ?? parsed.positionals[1] ?? process.cwd());
   if (!query) {
-    console.error("Usage: repobrain search <query> [repoRoot]");
+    console.error("Usage: repobrain search <query> [repoRoot|--repo repoRoot]");
     process.exit(1);
   }
 
