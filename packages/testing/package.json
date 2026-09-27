@@ -8,7 +8,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "check": "tsc -p tsconfig.json --noEmit",
-    "test": "node dist/smoke.test.js && node dist/ranking-eval.test.js"
+    "test": "node dist/smoke.test.js && node dist/stdio.test.js && node dist/benchmark.test.js && node dist/ranking-eval.test.js"
   },
   "dependencies": {
     "@repobrain/graph": "workspace:*",
